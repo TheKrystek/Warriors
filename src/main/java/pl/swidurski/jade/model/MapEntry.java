@@ -23,7 +23,7 @@ public class MapEntry {
     FlowPane pane = new FlowPane(4, 4);
 
     public MapEntry(int x, int y, ElementType type) {
-        if (type != ElementType.WALL)
+        if (type != ElementType.WALL && type != ElementType.PATH)
             add(new MapElement(x, y, ElementType.PATH));
         if (type == ElementType.TREASURE)
             add(new MapElement(x, y, ElementType.MONSTER));

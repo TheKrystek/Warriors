@@ -44,6 +44,11 @@ public class InformAboutMapState extends Behaviour {
         msg.addReceiver(agent);
         msg.setContent("XXX");
         msg.setConversationId(Const.INFORM_ABOUT_MAP);
+
+        String sender = agent.getLocalName();
+        State state = this.agent.getStates().get(sender);
+
+        this.agent.getInfo(state.getPosX(), state.getPosY());
         this.agent.send(msg);
     }
 
