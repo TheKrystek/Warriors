@@ -1,4 +1,4 @@
-package pl.swidurski.jade.gui;
+package pl.swidurski.jade.agents;
 
 import jade.core.AID;
 import jade.core.Agent;

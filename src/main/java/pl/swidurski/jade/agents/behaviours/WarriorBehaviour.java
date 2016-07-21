@@ -45,7 +45,6 @@ public class WarriorBehaviour extends TickerBehaviour {
         if (agent.getMode() != AgentMode.DIE)
             makeDecision();
 
-
         switch (agent.getMode()) {
             case LOOK_FOR_TREASURE:
                 lookForTreasure();

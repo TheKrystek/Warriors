@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
+import pl.swidurski.jade.agents.FighterAgent;
 import pl.swidurski.jade.agents.MonsterAgent;
 import pl.swidurski.jade.agents.WarriorAgent;
 

@@ -7,7 +7,6 @@ import jade.domain.FIPAException;
 import pl.swidurski.jade.Const;
 import pl.swidurski.jade.agents.behaviours.FightBehaviour;
 import pl.swidurski.jade.agents.behaviours.WaitForHelloBehaviour;
-import pl.swidurski.jade.gui.FighterAgent;
 import pl.swidurski.jade.gui.MonsterGUI;
 import pl.swidurski.jade.model.ElementType;
 import pl.swidurski.jade.model.State;

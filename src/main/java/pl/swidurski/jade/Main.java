@@ -18,6 +18,5 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Boot.main(args);
-        //new SceneManager(primaryStage, "gui/ChooseMap.fxml");
     }
 }

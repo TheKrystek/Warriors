@@ -4,8 +4,7 @@ import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import pl.swidurski.jade.Const;
-import pl.swidurski.jade.agents.WarriorAgent;
-import pl.swidurski.jade.gui.FighterAgent;
+import pl.swidurski.jade.agents.FighterAgent;
 
 /**
  * Created by Krystek on 2016-07-20.
