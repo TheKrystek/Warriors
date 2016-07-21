@@ -73,12 +73,12 @@ public class MapModel {
     }
 
 
-    public void removeWarrior(State state) {
+    public void remove(State state) {
         String key = getKey(state.getPosX(), state.getPosY());
         if (map.containsKey(key)) {
             MapEntry entry = map.get(key);
             for (int i = 0; i < entry.getElements().size(); i++) {
-                if (entry.getElements().get(i).getType() == ElementType.WARRIOR && entry.getElements().get(i).getAgent().equals(state.getAgent())) {
+                if (entry.getElements().get(i).getType() == state.getType() && entry.getElements().get(i).getAgent().equals(state.getAgent())) {
                     entry.remove(entry.getElements().get(i));
                 }
             }

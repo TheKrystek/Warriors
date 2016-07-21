@@ -16,7 +16,7 @@ public class MapState {
         x = Integer.parseInt(s[0]);
         y = Integer.parseInt(s[1]);
         type = ElementType.getElement(s[2]);
-        if (type == ElementType.WARRIOR)
+        if (type == ElementType.WARRIOR || type == ElementType.MONSTER)
             agent = s[3];
     }
 
@@ -40,7 +40,7 @@ public class MapState {
     @Override
     public String toString() {
         String result = String.format("%s,%s,%s", x, y, type);
-        if (type == ElementType.WARRIOR)
+        if (type == ElementType.WARRIOR || type == ElementType.MONSTER)
             return String.format("%s,%s", result, agent);
         return result;
     }

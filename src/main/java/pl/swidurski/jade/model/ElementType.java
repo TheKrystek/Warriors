@@ -7,12 +7,12 @@ import lombok.Getter;
  */
 public enum ElementType {
 
-    WALL('#', "black"),
-    PATH('_', "white"),
-    POTION('P', "blue"),
-    MONSTER('M', "brown"),
-    TREASURE('T', "yellow"),
-    WARRIOR('W', "red"), ;
+    WALL('#', "#2c3e50"),
+    PATH('_', "#ecf0f1"),
+    POTION('P', "#9b59b6"),
+    MONSTER('M', "#d35400"),
+    TREASURE('T', "#f1c40f"),
+    WARRIOR('W', "#c0392b"), ;
 
     @Getter
     private final String color;

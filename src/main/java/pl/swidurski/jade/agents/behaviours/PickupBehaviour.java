@@ -41,13 +41,9 @@ public class PickupBehaviour extends Behaviour {
                         agent.getInternalState().setPoints(point);
                     }
                     if (type == ElementType.POTION) {
-                        int hp = agent.getInternalState().getHp();
-                        int maxhp = agent.getInternalState().getMaxHp();
-                        hp = (hp + value) % (maxhp + 1);
-                        agent.getInternalState().setHp(hp);
+                        agent.getInternalState().addHp(value);
                     }
-
-                    agent.getGui().update();
+                    agent.update();
                     finish = true;
                 }
             } else {

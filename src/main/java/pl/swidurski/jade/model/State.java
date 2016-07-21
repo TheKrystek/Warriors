@@ -7,6 +7,11 @@ import lombok.Setter;
  * Created by Krystek on 2016-07-17.
  */
 public class State {
+
+    public State(ElementType type){
+        this.type = type;
+    }
+
     @Getter
     @Setter
     int damage, maxHp, speed, hp, posX, posY, points;
@@ -15,9 +20,12 @@ public class State {
     @Setter
     String agent;
 
+    @Getter
+    ElementType type;
+
     @Override
     public String toString() {
-        return String.format("%s;%s;%s;%s;%s;%s;%s;%s",
+        return String.format("%s;%s;%s;%s;%s;%s;%s;%s;%s",
                 getAgent(),
                 getPosX(),
                 getPosY(),
@@ -25,13 +33,14 @@ public class State {
                 getMaxHp(),
                 getDamage(),
                 getSpeed(),
-                getPoints());
+                getPoints(),
+                getType());
     }
 
 
     public static State loadFromString(String string) {
         String[] s = string.split(";");
-        State state = new State();
+        State state = new State(ElementType.getElement(s[8]));
         state.setAgent(s[0]);
         state.setPosX(Integer.parseInt(s[1]));
         state.setPosY(Integer.parseInt(s[2]));

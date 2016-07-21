@@ -8,6 +8,7 @@ import pl.swidurski.jade.agents.WarriorAgent;
 import pl.swidurski.jade.model.ElementType;
 import pl.swidurski.jade.model.MapState;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -41,13 +42,9 @@ public class WarriorBehaviour extends TickerBehaviour {
         chanceToWin = calculateChancesToWin();
 
         System.out.printf("%s: %s [%.2f]\r\n", agent.getLocalName().toUpperCase(), agent.getMode(), chanceToWin);
-        if (chanceToWin >= 0.2 && chanceToWin < 0.4) {
-            agent.setMode(AgentMode.FLEE);
-        } else if (chanceToWin < 0.2) {
-            agent.setMode(AgentMode.LOOK_FOR_POTION);
-        } else {
-            hasToFight();
-        }
+        if (agent.getMode() != AgentMode.DIE)
+            makeDecision();
+
 
         switch (agent.getMode()) {
             case LOOK_FOR_TREASURE:
@@ -76,31 +73,35 @@ public class WarriorBehaviour extends TickerBehaviour {
         }
     }
 
+    private void makeDecision() {
+        if (chanceToWin >= 0.2 && chanceToWin < 0.4 && (agent.getMode() != AgentMode.LOOK_FOR_POTION || agent.getMode() != AgentMode.PICKUP_POTION)) {
+            agent.setMode(AgentMode.FLEE);
+        } else if (chanceToWin < 0.2 && agent.getMode() != AgentMode.PICKUP_POTION) {
+            agent.setMode(AgentMode.LOOK_FOR_POTION);
+        } else {
+            hasToFight();
+        }
+    }
+
     private void flee() {
-        MapState next = null;
-        addCurrentState(state);
+        List<MapState> safeStates = new ArrayList<>();
         if (agent.getVisited().isEmpty()) {
-            for (MapState s : state) {
-                if (s.getType() != ElementType.WARRIOR && s.getType() != ElementType.MONSTER) {
-                    next = s;
-                    break;
-                }
-            }
+            safeStates.addAll(state.stream().filter(s -> s.getType() != ElementType.WARRIOR && s.getType() != ElementType.MONSTER).collect(Collectors.toList()));
 
         } else {
+            addCurrentState(state);
+
             for (MapState s : state) {
                 for (MapState v : agent.getVisited()) {
                     if (s.getX() == v.getX() && s.getY() == s.getY() && s.getType() != ElementType.WARRIOR && s.getType() != ElementType.MONSTER) {
-                        next = s;
+                        safeStates.add(s);
                         break;
                     }
                 }
-                if (next != null)
-                    break;
             }
         }
-        if (next != null)
-            move(next);
+        if (!safeStates.isEmpty())
+            move(safeStates.get(getRandom(safeStates.size())));
     }
 
     private void fight() {
@@ -109,7 +110,7 @@ public class WarriorBehaviour extends TickerBehaviour {
 
         boolean fight = false;
         for (MapState mapState : states) {
-            if (mapState.getType() == ElementType.WARRIOR && !mapState.getAgent().equals(agent.getLocalName())) {
+            if ((mapState.getType() == ElementType.WARRIOR || mapState.getType() == ElementType.MONSTER) && !mapState.getAgent().equals(agent.getLocalName())) {
                 attack(mapState.getAgent());
                 fight = true;
             }
@@ -128,7 +129,7 @@ public class WarriorBehaviour extends TickerBehaviour {
         List<MapState> states = state.parallelStream().filter(p -> p.getX() == agent.getInternalState().getPosX() &&
                 p.getY() == agent.getInternalState().getPosY()).collect(Collectors.toList());
         for (MapState mapState : states) {
-            if ((mapState.getType() == ElementType.WARRIOR | mapState.getType() == ElementType.MONSTER) && !mapState.getAgent().equals(agent.getLocalName())) {
+            if ((mapState.getType() == ElementType.WARRIOR || mapState.getType() == ElementType.MONSTER) && !mapState.getAgent().equals(agent.getLocalName())) {
                 agent.setMode(AgentMode.FIGHT);
             }
         }
@@ -147,7 +148,7 @@ public class WarriorBehaviour extends TickerBehaviour {
         if (hp < maxhp)
             hp++;
         agent.getInternalState().setHp(hp);
-        agent.getGui().update();
+        agent.update();
     }
 
     private void pickupTreasure() {
@@ -164,10 +165,10 @@ public class WarriorBehaviour extends TickerBehaviour {
         addCurrentState(state);
         List<MapState> newStates = getAvailablePositions(state);
 
-        Optional<MapState> treasure = getFirstByType(state, ElementType.POTION);
-        if (treasure.isPresent()) {
+        Optional<MapState> potion = getFirstByType(state, ElementType.POTION);
+        if (potion.isPresent()) {
             agent.setMode(AgentMode.PICKUP_POTION);
-            move(treasure.get());
+            move(potion.get());
             Optional<MapState> monster = getFirstByType(state, ElementType.MONSTER);
             Optional<MapState> warrior = getFirstByType(state, ElementType.WARRIOR);
             if (monster.isPresent() || warrior.isPresent())
@@ -239,7 +240,7 @@ public class WarriorBehaviour extends TickerBehaviour {
 
     public void informAboutLocation() {
         agent.addBehaviour(new InformAboutLocationBehaviour(agent));
-        agent.getGui().update();
+        agent.update();
     }
 
     public void attack(String warrior) {

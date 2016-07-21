@@ -51,8 +51,8 @@
          <children>
             <HBox alignment="CENTER">
                <children>
-                  <Slider fx:id="hpSlider" max="1000.0" min="1.0" value="100.0" />
-                  <Label fx:id="hpLabel" maxWidth="1.7976931348623157E308" prefWidth="30.0" text="100" HBox.hgrow="ALWAYS" />
+                  <Slider fx:id="hpSlider" max="1000.0" min="1.0" prefHeight="18.0" prefWidth="126.0" value="1000.0" />
+                  <Label fx:id="hpLabel" maxWidth="1.7976931348623157E308" prefWidth="30.0" text="1000" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
             <ProgressBar fx:id="hpBar" disable="true" prefWidth="200.0" progress="0.0" />
@@ -60,8 +60,8 @@
       </VBox>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <children>
-            <Slider fx:id="damageSlider" min="1.0" value="50.0" />
-            <Label fx:id="damageLabel" text="50" />
+            <Slider fx:id="damageSlider" min="1.0" value="10.0" />
+            <Label fx:id="damageLabel" text="10" />
          </children>
       </HBox>
       <Label fx:id="nameLabel" GridPane.columnIndex="1" />

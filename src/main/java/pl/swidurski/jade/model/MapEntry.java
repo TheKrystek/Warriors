@@ -25,11 +25,7 @@ public class MapEntry {
     public MapEntry(int x, int y, ElementType type) {
         if (type != ElementType.WALL && type != ElementType.PATH)
             add(new MapElement(x, y, ElementType.PATH));
-        if (type == ElementType.TREASURE)
-            add(new MapElement(x, y, ElementType.MONSTER));
-
         add(new MapElement(x, y, type));
-
         setBackground();
         setSize();
     }
@@ -65,6 +61,8 @@ public class MapEntry {
         if (setBackgroundColor(firstOfType(ElementType.TREASURE)))
             return;
         if (setBackgroundColor(firstOfType(ElementType.WARRIOR)))
+            return;
+        if (setBackgroundColor(firstOfType(ElementType.MONSTER)))
             return;
         if (setBackgroundColor(firstOfType(ElementType.POTION)))
             return;

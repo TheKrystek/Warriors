@@ -27,15 +27,13 @@ public class InformAboutMapStateBehaviour extends Behaviour {
         ACLMessage reply = agent.receive(mt);
         if (reply != null) {
             if (reply.getPerformative() == ACLMessage.INFORM) {
-                //System.out.println("RECEIVED: " + reply.getContent());
-
                 State state = State.loadFromString(reply.getContent());
                 String sender = reply.getSender().getLocalName();
                 if (state.getHp() > 0) {
                     agent.getStates().put(sender, state);
                     agent.move(sender);
                 } else {
-                    agent.getModel().removeWarrior(state);
+                    agent.getModel().remove(state);
                     agent.getWarriors().remove(reply.getSender());
                     agent.getStates().remove(reply.getSender());
                     int points = state.getPoints();

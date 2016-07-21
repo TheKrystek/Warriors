@@ -9,6 +9,7 @@ import pl.swidurski.jade.agents.behaviours.FightBehaviour;
 import pl.swidurski.jade.agents.behaviours.WaitForHelloBehaviour;
 import pl.swidurski.jade.gui.FighterAgent;
 import pl.swidurski.jade.gui.MonsterGUI;
+import pl.swidurski.jade.model.ElementType;
 import pl.swidurski.jade.model.State;
 
 /**
@@ -22,7 +23,7 @@ public class MonsterAgent extends FighterAgent {
         super.setup();
         launchGUI();
         setMode(AgentMode.WAIT);
-        setInternalState(new State());
+        setInternalState(new State(ElementType.MONSTER));
         getInternalState().setAgent(getAID().getLocalName());
         addBehaviour(new WaitForHelloBehaviour(this));
         addBehaviour(new FightBehaviour(this));

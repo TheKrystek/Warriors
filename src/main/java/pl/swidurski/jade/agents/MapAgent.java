@@ -65,7 +65,7 @@ public class MapAgent extends Agent {
 
     private MapElement createElement(String agent) {
         State state = states.get(agent);
-        MapElement element = new MapElement(state.getPosX(), state.getPosY(), ElementType.WARRIOR);
+        MapElement element = new MapElement(state.getPosX(), state.getPosY(), state.getType());
         element.setAgent(agent);
         elements.put(agent, element);
         return element;
@@ -74,9 +74,11 @@ public class MapAgent extends Agent {
     public void move(String agent) {
         State state = states.get(agent);
         MapElement element;
-        if (!elements.containsKey(agent))
+        if (!elements.containsKey(agent)) {
             element = createElement(agent);
-        else
+            if (element.getType() == ElementType.MONSTER)
+                getModel().add(state.getPosX(), state.getPosY(), new MapElement(state.getPosX(), state.getPosY(), ElementType.TREASURE));
+        } else
             element = elements.get(agent);
         getModel().add(state.getPosX(), state.getPosY(), element);
     }

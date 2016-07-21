@@ -11,6 +11,7 @@ import pl.swidurski.jade.agents.behaviours.FightBehaviour;
 import pl.swidurski.jade.agents.behaviours.WaitForHelloBehaviour;
 import pl.swidurski.jade.gui.FighterAgent;
 import pl.swidurski.jade.gui.WarriorGUI;
+import pl.swidurski.jade.model.ElementType;
 import pl.swidurski.jade.model.MapState;
 import pl.swidurski.jade.model.State;
 
@@ -25,7 +26,6 @@ public class WarriorAgent extends FighterAgent {
     @Setter
     private List<MapState> visited = new ArrayList<>();
 
-    @Getter
     WarriorGUI gui;
 
     @Override
@@ -33,7 +33,7 @@ public class WarriorAgent extends FighterAgent {
         super.setup();
         launchGUI();
         setMode(AgentMode.LOOK_FOR_TREASURE);
-        setInternalState(new State());
+        setInternalState(new State(ElementType.WARRIOR));
         getInternalState().setAgent(getAID().getLocalName());
         addBehaviour(new WaitForHelloBehaviour(this));
         addBehaviour(new FightBehaviour(this));

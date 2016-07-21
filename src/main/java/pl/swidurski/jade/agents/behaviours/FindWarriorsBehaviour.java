@@ -10,16 +10,21 @@ import jade.lang.acl.ACLMessage;
 import pl.swidurski.jade.Const;
 import pl.swidurski.jade.agents.MapAgent;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Created by Krystek on 2016-07-16.
  */
 public class FindWarriorsBehaviour extends TickerBehaviour {
     private final MapAgent mapAgent;
     private final DFAgentDescription template = new DFAgentDescription();
-    private final ServiceDescription sd = new ServiceDescription();
+
 
     public FindWarriorsBehaviour(MapAgent mapAgent) {
-        this(mapAgent, 5000);
+        this(mapAgent, 1000);
     }
 
     public FindWarriorsBehaviour(MapAgent mapAgent, long period) {
@@ -36,24 +41,39 @@ public class FindWarriorsBehaviour extends TickerBehaviour {
     @Override
     protected void onTick() {
         try {
-            sd.setType(Const.WARRIOR_TYPE);
-            template.addServices(sd);
-            DFAgentDescription[] results = DFService.search(mapAgent, template);
+            DFAgentDescription[] warriors = DFService.search(mapAgent, getTemplate(Const.WARRIOR_TYPE));
+            DFAgentDescription[] monsters = DFService.search(mapAgent, getTemplate(Const.MONSTER_TYPE));
+
+            List<DFAgentDescription> results = new ArrayList<>();
+            results.addAll(Arrays.asList(warriors));
+            results.addAll(Arrays.asList(monsters));
 
             for (DFAgentDescription result : results) {
                 AID agent = result.getName();
                 if (mapAgent.getWarriors().contains(agent))
                     continue;
-                System.out.println("FindWarriorsBehaviour() - new agent found: " + agent.getLocalName());
                 mapAgent.getWarriors().add(agent);
-
-                // Wyślij powitanie - agent do którego wyślemy powitanie odpowie wiadomością z informacją o własnym stanie
                 sayHello(agent);
             }
         } catch (FIPAException fe) {
             fe.printStackTrace();
         }
     }
+
+    private ServiceDescription getService(String type) {
+        ServiceDescription service = new ServiceDescription();
+        service.setType(type);
+        return service;
+    }
+
+    private DFAgentDescription getTemplate(String type){
+        DFAgentDescription template = new DFAgentDescription();
+        template.addServices(getService(type));
+        return template;
+    }
+
+
+
 
     public void sayHello(AID agent) {
         String content = getHelloMsg(agent);
