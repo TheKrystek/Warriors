@@ -3,6 +3,7 @@ package pl.swidurski.jade.agents.behaviours;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import pl.swidurski.jade.agents.MonsterAgent;
 import pl.swidurski.jade.agents.WarriorAgent;
 
 /**
@@ -22,15 +23,21 @@ public class WaitForHelloBehaviour extends Behaviour {
         ACLMessage reply = agent.receive(mt);
         if (reply != null) {
             if (reply.getPerformative() == ACLMessage.INFORM) {
-                System.out.println("RECEIVED: " + reply.getContent());
                 agent.setMapAgent(reply.getSender());
-                agent.addBehaviour(new InformAboutLocationBehaviour(agent));
-                agent.addBehaviour(new WarriorBehaviour(agent));
+                assignBehaviour();
             }
             finish = true;
         } else {
             block();
         }
+    }
+
+    private void assignBehaviour() {
+        agent.addBehaviour(new InformAboutLocationBehaviour(agent));
+        if (agent instanceof MonsterAgent)
+            agent.addBehaviour(new MonsterBehaviour((MonsterAgent) agent));
+        else
+            agent.addBehaviour(new WarriorBehaviour(agent));
     }
 
     @Override

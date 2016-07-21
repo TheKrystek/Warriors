@@ -4,6 +4,7 @@ import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import pl.swidurski.jade.Const;
 import pl.swidurski.jade.agents.AgentMode;
+import pl.swidurski.jade.agents.MonsterAgent;
 import pl.swidurski.jade.agents.WarriorAgent;
 import pl.swidurski.jade.model.ElementType;
 import pl.swidurski.jade.model.MapState;
@@ -16,13 +17,13 @@ import java.util.stream.Collectors;
 /**
  * Created by Krystek on 2016-07-17.
  */
-public class WarriorBehaviour extends TickerBehaviour {
-    private WarriorAgent agent;
+public class MonsterBehaviour extends TickerBehaviour {
+    private MonsterAgent agent;
     private Random random = new Random();
     private List<MapState> state;
 
-    public WarriorBehaviour(WarriorAgent agent) {
-        super(agent, (61 - agent.getInternalState().getSpeed()) * 1000);
+    public MonsterBehaviour(MonsterAgent agent) {
+        super(agent, 1000);
         this.agent = agent;
     }
 
