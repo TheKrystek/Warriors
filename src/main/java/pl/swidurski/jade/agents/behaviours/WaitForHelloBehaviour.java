@@ -5,16 +5,17 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import pl.swidurski.jade.agents.MonsterAgent;
 import pl.swidurski.jade.agents.WarriorAgent;
+import pl.swidurski.jade.gui.FighterAgent;
 
 /**
  * Created by Krystek on 2016-07-16.
  */
 public class WaitForHelloBehaviour extends Behaviour {
-    private final WarriorAgent agent;
+    private final FighterAgent agent;
     private MessageTemplate mt = MessageTemplate.MatchConversationId("hello");
     private boolean finish = false;
 
-    public WaitForHelloBehaviour(WarriorAgent agent) {
+    public WaitForHelloBehaviour(FighterAgent agent) {
         this.agent = agent;
     }
 
@@ -34,10 +35,12 @@ public class WaitForHelloBehaviour extends Behaviour {
 
     private void assignBehaviour() {
         agent.addBehaviour(new InformAboutLocationBehaviour(agent));
+
         if (agent instanceof MonsterAgent)
             agent.addBehaviour(new MonsterBehaviour((MonsterAgent) agent));
-        else
-            agent.addBehaviour(new WarriorBehaviour(agent));
+
+        if (agent instanceof WarriorAgent)
+            agent.addBehaviour(new WarriorBehaviour((WarriorAgent) agent));
     }
 
     @Override

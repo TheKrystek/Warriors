@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
+import pl.swidurski.jade.agents.MonsterAgent;
 import pl.swidurski.jade.agents.WarriorAgent;
 
 import java.io.IOException;
@@ -17,7 +18,7 @@ public class SceneManager {
 
     @Getter
     @Setter
-    WarriorAgent warriorAgent;
+    FighterAgent fighterAgent;
 
     @Getter
     Stage stage;
@@ -31,17 +32,21 @@ public class SceneManager {
     @Getter
     WarriorController warriorController;
 
+    @Getter
+    MonsterController monsterController;
+
+
     public SceneManager(Stage primaryStage, String s) {
-        this(primaryStage, s, 500, 500, true);
+        this(primaryStage, s, 550, 550, true);
     }
 
     public SceneManager(Stage primaryStage, String s, int width, int height, boolean resizable) {
         this(primaryStage, s, width, height, resizable, null);
     }
 
-    public SceneManager(Stage primaryStage, String s, int width, int height, boolean resizable, WarriorAgent agent) {
+    public SceneManager(Stage primaryStage, String s, int width, int height, boolean resizable, FighterAgent agent) {
         this.stage = primaryStage;
-        setWarriorAgent(agent);
+        setFighterAgent(agent);
         primaryStage.setScene(new Scene(load(s), width, height));
         primaryStage.setResizable(resizable);
         primaryStage.show();
@@ -60,9 +65,15 @@ public class SceneManager {
             if (controller instanceof MapController)
                 mapController = (MapController) controller;
 
+
+            if (controller instanceof MonsterController) {
+                monsterController = (MonsterController) controller;
+                monsterController.setMonsterAgent((MonsterAgent) getFighterAgent());
+            }
+
             if (controller instanceof WarriorController) {
                 warriorController = (WarriorController) controller;
-                warriorController.setWarriorAgent(getWarriorAgent());
+                warriorController.setWarriorAgent((WarriorAgent) getFighterAgent());
             }
 
             controller.setManager(this);

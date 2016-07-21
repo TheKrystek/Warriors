@@ -5,15 +5,16 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import pl.swidurski.jade.Const;
 import pl.swidurski.jade.agents.WarriorAgent;
+import pl.swidurski.jade.gui.FighterAgent;
 
 /**
  * Created by Krystek on 2016-07-20.
  */
 public class FightBehaviour extends Behaviour {
-    private final WarriorAgent agent;
+    private final FighterAgent agent;
     private final MessageTemplate mt = MessageTemplate.MatchConversationId(Const.ATTACK);
 
-    public FightBehaviour(WarriorAgent agent) {
+    public FightBehaviour(FighterAgent agent) {
         this.agent = agent;
     }
 
@@ -23,8 +24,8 @@ public class FightBehaviour extends Behaviour {
         if (reply != null) {
             if (reply.getPerformative() == ACLMessage.INFORM) {
                 int dmg = Integer.parseInt(reply.getContent());
-                agent.addHp(-dmg);
-                agent.getGui().update();
+                agent.getInternalState().addHp(-dmg);
+                agent.update();
             }
         } else {
             block();

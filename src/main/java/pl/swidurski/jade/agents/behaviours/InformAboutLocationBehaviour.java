@@ -4,7 +4,7 @@ import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import pl.swidurski.jade.Const;
-import pl.swidurski.jade.agents.WarriorAgent;
+import pl.swidurski.jade.gui.FighterAgent;
 import pl.swidurski.jade.model.MapState;
 
 import java.util.List;
@@ -13,12 +13,12 @@ import java.util.List;
  * Created by Krystek on 2016-07-17.
  */
 public class InformAboutLocationBehaviour extends Behaviour {
-    private final WarriorAgent agent;
+    private final FighterAgent agent;
     private boolean finish = false;
     private MessageTemplate mt = MessageTemplate.MatchConversationId(Const.INFORM_ABOUT_MAP);
     int step = 0;
 
-    public InformAboutLocationBehaviour(WarriorAgent agent) {
+    public InformAboutLocationBehaviour(FighterAgent agent) {
         this.agent = agent;
     }
 
@@ -41,10 +41,10 @@ public class InformAboutLocationBehaviour extends Behaviour {
         if (reply != null) {
             if (reply.getPerformative() == ACLMessage.INFORM) {
                 List<MapState> list = MapState.fromString(reply.getContent());
-                agent.makeDecision(list);
+                agent.setMapState(list);
                 if (agent.getInternalState().getHp() <= 0) {
                     agent.getInternalState().setPoints(0);
-                    agent.getGui().update();
+                    agent.update();
                 }
                 finish = true;
             }

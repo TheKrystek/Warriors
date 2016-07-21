@@ -2,7 +2,6 @@ package pl.swidurski.jade.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import pl.swidurski.jade.agents.WarriorAgent;
 
 /**
  * Created by Krystek on 2016-07-17.
@@ -10,7 +9,7 @@ import pl.swidurski.jade.agents.WarriorAgent;
 public class State {
     @Getter
     @Setter
-    int damage, maxHp, speed, hp, posX, posY,points;
+    int damage, maxHp, speed, hp, posX, posY, points;
 
     @Getter
     @Setter
@@ -44,7 +43,9 @@ public class State {
         return state;
     }
 
-    public static void loadFromString(WarriorAgent agent, String string) {
-        agent.setInternalState(loadFromString(string));
+    public void addHp(int i) {
+        hp += i;
+        if (hp > maxHp)
+            hp = maxHp;
     }
 }

@@ -23,7 +23,7 @@ public class MonsterGUI {
     private void configure() {
         stage = new Stage();
         stage.setTitle(agent.getLocalName());
-        sceneManager = new SceneManager(stage, Const.WARRIOR_GUI, 320, 320, false, agent);
+        sceneManager = new SceneManager(stage, Const.MONSTER_GUI, 320, 220, false, agent);
     }
 
     public void close() {
@@ -32,6 +32,6 @@ public class MonsterGUI {
     }
 
     public void update() {
-        Platform.runLater(() -> sceneManager.getWarriorController().update());
+        Platform.runLater(() -> sceneManager.getMonsterController().update());
     }
 }

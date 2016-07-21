@@ -56,10 +56,8 @@ public class WarriorBehaviour extends TickerBehaviour {
             case PICKUP_TREASURE:
                 pickupTreasure();
                 break;
-            case FIGHT_MONSTER:
-                break;
-            case FIGHT_WARRIOR:
-                fightWarrior();
+            case FIGHT:
+                fight();
                 break;
             case LOOK_FOR_POTION:
                 lookForPotion();
@@ -105,7 +103,7 @@ public class WarriorBehaviour extends TickerBehaviour {
             move(next);
     }
 
-    private void fightWarrior() {
+    private void fight() {
         List<MapState> states = state.parallelStream().filter(p -> p.getX() == agent.getInternalState().getPosX() &&
                 p.getY() == agent.getInternalState().getPosY()).collect(Collectors.toList());
 
@@ -130,8 +128,8 @@ public class WarriorBehaviour extends TickerBehaviour {
         List<MapState> states = state.parallelStream().filter(p -> p.getX() == agent.getInternalState().getPosX() &&
                 p.getY() == agent.getInternalState().getPosY()).collect(Collectors.toList());
         for (MapState mapState : states) {
-            if (mapState.getType() == ElementType.WARRIOR && !mapState.getAgent().equals(agent.getLocalName())) {
-                agent.setMode(AgentMode.FIGHT_WARRIOR);
+            if ((mapState.getType() == ElementType.WARRIOR | mapState.getType() == ElementType.MONSTER) && !mapState.getAgent().equals(agent.getLocalName())) {
+                agent.setMode(AgentMode.FIGHT);
             }
         }
     }
@@ -170,6 +168,10 @@ public class WarriorBehaviour extends TickerBehaviour {
         if (treasure.isPresent()) {
             agent.setMode(AgentMode.PICKUP_POTION);
             move(treasure.get());
+            Optional<MapState> monster = getFirstByType(state, ElementType.MONSTER);
+            Optional<MapState> warrior = getFirstByType(state, ElementType.WARRIOR);
+            if (monster.isPresent() || warrior.isPresent())
+                return;
             pickupPotion();
             return;
         }

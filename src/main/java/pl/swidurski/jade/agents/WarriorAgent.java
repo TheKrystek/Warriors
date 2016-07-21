@@ -1,7 +1,5 @@
 package pl.swidurski.jade.agents;
 
-import jade.core.AID;
-import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
@@ -11,6 +9,7 @@ import lombok.Setter;
 import pl.swidurski.jade.Const;
 import pl.swidurski.jade.agents.behaviours.FightBehaviour;
 import pl.swidurski.jade.agents.behaviours.WaitForHelloBehaviour;
+import pl.swidurski.jade.gui.FighterAgent;
 import pl.swidurski.jade.gui.WarriorGUI;
 import pl.swidurski.jade.model.MapState;
 import pl.swidurski.jade.model.State;
@@ -21,24 +20,7 @@ import java.util.List;
 /**
  * Created by Krystek on 2016-07-16.
  */
-public class WarriorAgent extends Agent {
-    @Getter
-    @Setter
-    AID mapAgent;
-
-    @Getter
-    @Setter
-    private AgentMode mode = AgentMode.LOOK_FOR_TREASURE;
-
-
-    @Getter
-    @Setter
-    private State internalState;
-
-    @Getter
-    @Setter
-    private List<MapState> mapState;
-
+public class WarriorAgent extends FighterAgent {
     @Getter
     @Setter
     private List<MapState> visited = new ArrayList<>();
@@ -46,19 +28,13 @@ public class WarriorAgent extends Agent {
     @Getter
     WarriorGUI gui;
 
-
-    public void addHp(int hp) {
-        int currHp = getInternalState().getHp();
-        getInternalState().setHp(currHp + hp);
-        getGui().update();
-    }
-
     @Override
     protected void setup() {
         super.setup();
         launchGUI();
-        internalState = new State();
-        internalState.setAgent(getAID().getLocalName());
+        setMode(AgentMode.LOOK_FOR_TREASURE);
+        setInternalState(new State());
+        getInternalState().setAgent(getAID().getLocalName());
         addBehaviour(new WaitForHelloBehaviour(this));
         addBehaviour(new FightBehaviour(this));
     }
@@ -88,9 +64,8 @@ public class WarriorAgent extends Agent {
         }
     }
 
-    public void makeDecision(List<MapState> list) {
-        this.mapState = list;
+    @Override
+    public void update() {
+        gui.update();
     }
-
-
 }

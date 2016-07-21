@@ -17,6 +17,7 @@ public class Const {
     public static final String MONSTER_NAME = "JADE-MONSTER";
     public static final String MAP_GUI = "gui/ChooseMap.fxml";
     public static final String WARRIOR_GUI = "gui/Warrior.fxml";
+    public static final String MONSTER_GUI = "gui/Monster.fxml";
     public static final String INFORM_ABOUT_POSITION = "inform-about-position";
     public static final String INFORM_ABOUT_MAP = "inform-about-map";
     public static final String PICKUP = "pickup";
