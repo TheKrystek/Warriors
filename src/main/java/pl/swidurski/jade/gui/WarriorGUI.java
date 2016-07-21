@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import pl.swidurski.jade.Const;
 import pl.swidurski.jade.agents.WarriorAgent;
-import pl.swidurski.jade.model.MapModel;
 
 /**
  * Created by Krystek on 2016-07-16.
@@ -31,9 +30,7 @@ public class WarriorGUI {
             Platform.runLater(() -> stage.close());
     }
 
-    public MapModel getMapModel() {
-        if (sceneManager.getMapController() == null)
-            return null;
-        return sceneManager.getMapController().getMapModel();
+    public void update() {
+        Platform.runLater(() -> sceneManager.getWarriorController().update());
     }
 }

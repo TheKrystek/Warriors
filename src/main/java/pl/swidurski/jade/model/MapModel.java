@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -53,7 +54,39 @@ public class MapModel {
     }
 
 
-    public String getKey(int x, int y) {
+    public int remove(int x, int y, ElementType element) {
+        String key = getKey(x, y);
+        if (map.containsKey(key)) {
+            MapEntry entry = map.get(key);
+            int sum = 0;
+            List<MapElement> elements = entry.getElements();
+            for (int i = 0; i < elements.size(); i++) {
+                if (elements.get(i).getType() == element) {
+                    sum += elements.get(i).getPoints();
+                    entry.remove(elements.get(i));
+                }
+            }
+            entry.setBackground();
+            return sum;
+        }
+        return 0;
+    }
+
+
+    public void removeWarrior(State state) {
+        String key = getKey(state.getPosX(), state.getPosY());
+        if (map.containsKey(key)) {
+            MapEntry entry = map.get(key);
+            for (int i = 0; i < entry.getElements().size(); i++) {
+                if (entry.getElements().get(i).getType() == ElementType.WARRIOR && entry.getElements().get(i).getAgent().equals(state.getAgent())) {
+                    entry.remove(entry.getElements().get(i));
+                }
+            }
+            entry.setBackground();
+        }
+    }
+
+    public static String getKey(int x, int y) {
         return String.format("%s.%s", x, y);
     }
 

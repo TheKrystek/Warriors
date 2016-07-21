@@ -5,7 +5,8 @@ import javafx.scene.control.ComboBox;
 import pl.swidurski.jade.Const;
 
 public class ChooseMapController extends Controller {
-    private static final String[] maps = new String[]{"base.map"};
+    private static final String[] maps = new String[]{"one.map","two.map"};
+
 
     @FXML
     ComboBox<String> mapSelector;

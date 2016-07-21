@@ -28,6 +28,9 @@ public class SceneManager {
     @Getter
     MapController mapController;
 
+    @Getter
+    WarriorController warriorController;
+
     public SceneManager(Stage primaryStage, String s) {
         this(primaryStage, s, 500, 500, true);
     }
@@ -58,7 +61,7 @@ public class SceneManager {
                 mapController = (MapController) controller;
 
             if (controller instanceof WarriorController) {
-                WarriorController warriorController = (WarriorController) controller;
+                warriorController = (WarriorController) controller;
                 warriorController.setWarriorAgent(getWarriorAgent());
             }
 

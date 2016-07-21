@@ -4,9 +4,7 @@ import jade.core.AID;
 import jade.core.Agent;
 import lombok.Getter;
 import lombok.Setter;
-import pl.swidurski.jade.agents.behaviours.FindWarriorsBehaviour;
-import pl.swidurski.jade.agents.behaviours.GetMapModelBehaviour;
-import pl.swidurski.jade.agents.behaviours.InformAboutMapState;
+import pl.swidurski.jade.agents.behaviours.*;
 import pl.swidurski.jade.gui.MapGUI;
 import pl.swidurski.jade.model.*;
 
@@ -33,6 +31,8 @@ public class MapAgent extends Agent {
     @Setter
     @Getter
     Map<String, State> states = new HashMap<>();
+    @Setter
+    @Getter
     Map<String, MapElement> elements = new HashMap<>();
 
 
@@ -46,7 +46,9 @@ public class MapAgent extends Agent {
     private void addBehaviours() {
         addBehaviour(new GetMapModelBehaviour(this));
         addBehaviour(new FindWarriorsBehaviour(this));
-        addBehaviour(new InformAboutMapState(this));
+        addBehaviour(new InformAboutMapStateBehaviour(this));
+        addBehaviour(new AnswerPickupBehaviour(this));
+        addBehaviour(new SuperviseFightBehaviour(this));
     }
 
     private void launchGUI() {
@@ -64,11 +66,12 @@ public class MapAgent extends Agent {
     private MapElement createElement(String agent) {
         State state = states.get(agent);
         MapElement element = new MapElement(state.getPosX(), state.getPosY(), ElementType.WARRIOR);
+        element.setAgent(agent);
         elements.put(agent, element);
         return element;
     }
 
-    public void move(String agent){
+    public void move(String agent) {
         State state = states.get(agent);
         MapElement element;
         if (!elements.containsKey(agent))
@@ -78,26 +81,34 @@ public class MapAgent extends Agent {
         getModel().add(state.getPosX(), state.getPosY(), element);
     }
 
-    public void getMapInfo(int x, int y){
+    private List<MapState> getMapInfo(int x, int y) {
+        List<MapState> result = new ArrayList<>();
         String key = model.getKey(x, y);
         MapEntry entry = model.getMap().get(key);
         for (MapElement element : entry.getElements()) {
-            System.out.println(key + " " + element.getType());
+            ElementType type = element.getType();
+            if (type == ElementType.WALL)
+                continue;
+            result.add(new MapState(element));
         }
+        return result;
     }
 
-    public void getInfo(int x, int y){
+    public List<MapState> getInfo(int x, int y) {
+        List<MapState> result = new ArrayList<>();
         for (int i = -1; i <= 1; i++)
-        {
-            for (int j = -1; j <= 1; j++){
-                getMapInfo(x + i, y + j);
-            }
-        }
-
-
+            for (int j = -1; j <= 1; j++)
+                result.addAll(getMapInfo(x + i, y + j));
+        return result;
     }
 
-
+    public AID getAIDByName(String name) {
+        for (AID aid : warriors) {
+            if (aid.getLocalName().equals(name))
+                return aid;
+        }
+        return null;
+    }
 }
 
 

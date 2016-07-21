@@ -3,10 +3,7 @@ package pl.swidurski.jade.gui;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import lombok.Getter;
 import lombok.Setter;
 import pl.swidurski.jade.agents.WarriorAgent;
@@ -15,11 +12,9 @@ import pl.swidurski.jade.agents.WarriorAgent;
  * Created by Krystek on 2016-07-16.
  */
 public class WarriorController extends Controller {
-    @FXML
-    private Button saveButton;
 
     @FXML
-    private TextField nameField;
+    private Button saveButton;
 
     @FXML
     private TextField posXField;
@@ -28,85 +23,100 @@ public class WarriorController extends Controller {
     private TextField posYField;
 
     @FXML
-    private TextField hpField;
+    private Slider hpSlider;
 
     @FXML
-    private TextField maxHpField;
+    private Label hpLabel;
 
     @FXML
     private ProgressBar hpBar;
 
     @FXML
-    private TextField damageField;
+    private Slider speedSlider;
 
     @FXML
-    private TextField treasureField;
+    private Label speedLabel;
 
     @FXML
-    private TextField stateField;
+    private Slider damageSlider;
+
+    @FXML
+    private Label damageLabel;
+
+    @FXML
+    private Label treasureLabel;
+
+    @FXML
+    private Label nameLabel;
 
     @Getter
     @Setter
     WarriorAgent warriorAgent;
 
+    int hpMax;
 
     @Override
     public void init() {
         System.out.println(getWarriorAgent().getLocalName());
         getManager().getStage().setTitle(getWarriorAgent().getLocalName());
-        nameField.setText(getWarriorAgent().getLocalName());
-        treasureField.setText("0");
+        nameLabel.setText(getWarriorAgent().getLocalName());
+        treasureLabel.setText("0");
+
+        hpSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            hpLabel.setText(String.valueOf(newValue.intValue()));
+        });
+
+        speedSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            speedLabel.setText(String.valueOf(newValue.intValue()));
+        });
+
+        damageSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            damageLabel.setText(String.valueOf(newValue.intValue()));
+        });
     }
+
 
     @FXML
     public void saveAction() {
         int x = validatePosition(posXField);
         int y = validatePosition(posYField);
-        int hp = validateHP(maxHpField);
-        int dmg = validateDMG(damageField);
-        if (x < 0 || y < 0 || hp < 0 || dmg < 0)
+        if (x < 0 || y < 0)
             return;
 
+        hpMax = (int) hpSlider.getValue();
         warriorAgent.getInternalState().setPosX(x);
         warriorAgent.getInternalState().setPosY(y);
-        warriorAgent.getInternalState().setHp(hp);
-        warriorAgent.getInternalState().setMaxHp(hp);
-        warriorAgent.getInternalState().setDamage(dmg);
+        warriorAgent.getInternalState().setHp(hpMax);
+        warriorAgent.getInternalState().setMaxHp(hpMax);
+        warriorAgent.getInternalState().setDamage((int) damageSlider.getValue());
+        warriorAgent.getInternalState().setSpeed((int) speedSlider.getValue());
+        warriorAgent.getInternalState().setPoints(0);
 
-        hpMax = hp;
-        updateHp(hp);
+        updateHp(hpMax);
 
-        showTooltip(damageField.getParent(), "ZAPISANO!", 50, 50);
+        showTooltip(nameLabel.getParent(), "ZAPISANO!", 125, 0);
         saveButton.setVisible(false);
 
-        nameField.setDisable(true);
+        damageSlider.setDisable(true);
         posXField.setDisable(true);
         posYField.setDisable(true);
-        hpField.setDisable(true);
-        maxHpField.setDisable(true);
-        damageField.setDisable(true);
-        treasureField.setDisable(true);
-        stateField.setDisable(true);
+        speedSlider.setDisable(true);
+        hpSlider.setDisable(true);
 
         // Po zapisaniu zarejestruj się w yellow pages
         getWarriorAgent().registerInYellowPages();
     }
 
-    int hpMax;
+    public void update() {
+        posXField.setText(String.valueOf(warriorAgent.getInternalState().getPosX()));
+        posYField.setText(String.valueOf(warriorAgent.getInternalState().getPosY()));
+        treasureLabel.setText(String.valueOf(warriorAgent.getInternalState().getPoints()));
+        updateHp(warriorAgent.getInternalState().getHp());
+    }
+
 
     public void updateHp(int hp) {
-        hpField.setText(String.valueOf(hp));
-        double value = hp / (double) hpMax;
-        hpBar.setProgress(value);
-    }
-
-
-    private int validateHP(TextField textField) {
-        return validate(textField, "Pole życie musi być wypełnione wartością z przediału 0 - ", 1000);
-    }
-
-    private int validateDMG(TextField textField) {
-        return validate(textField, "Pole obrażenia musi być wypełnione wartością z przediału 0 - ", 200);
+        hpBar.setProgress(hp / (double) hpMax);
     }
 
 

@@ -1,12 +1,13 @@
 package pl.swidurski.jade.agents.behaviours;
 
-import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import pl.swidurski.jade.Const;
 import pl.swidurski.jade.agents.WarriorAgent;
-import pl.swidurski.jade.utils.AgentStateHelper;
+import pl.swidurski.jade.model.MapState;
+
+import java.util.List;
 
 /**
  * Created by Krystek on 2016-07-17.
@@ -24,7 +25,7 @@ public class InformAboutLocationBehaviour extends Behaviour {
 
     @Override
     public void action() {
-        switch (step){
+        switch (step) {
             case 0:
                 sendPositionInformation();
                 step++;
@@ -39,7 +40,12 @@ public class InformAboutLocationBehaviour extends Behaviour {
         ACLMessage reply = agent.receive(mt);
         if (reply != null) {
             if (reply.getPerformative() == ACLMessage.INFORM) {
-                System.out.println("RECEIVED: " + reply.getContent());
+                List<MapState> list = MapState.fromString(reply.getContent());
+                agent.makeDecision(list);
+                if (agent.getInternalState().getHp() <= 0) {
+                    agent.getInternalState().setPoints(0);
+                    agent.getGui().update();
+                }
                 finish = true;
             }
         } else {
@@ -50,7 +56,7 @@ public class InformAboutLocationBehaviour extends Behaviour {
     public void sendPositionInformation() {
         ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
         msg.addReceiver(agent.getMapAgent());
-        msg.setContent(AgentStateHelper.saveToString(agent));
+        msg.setContent(agent.getInternalState().toString());
         msg.setConversationId(Const.INFORM_ABOUT_POSITION);
         agent.send(msg);
     }

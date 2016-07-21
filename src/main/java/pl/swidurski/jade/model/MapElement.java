@@ -18,6 +18,14 @@ public class MapElement {
     @Setter
     ElementType type;
 
+    @Getter
+    @Setter
+    String agent;
+
+    @Getter
+    @Setter
+    int points;
+
     @Setter
     @Getter
     Node node;
@@ -29,12 +37,15 @@ public class MapElement {
         this.y = y;
         this.type = type;
         this.node = buildNode();
+        if (type == ElementType.TREASURE)
+            points = 10;
+        if (type == ElementType.POTION)
+            points = 100;
     }
 
     private Node buildNode() {
         if (type == ElementType.PATH || type == ElementType.WALL)
             return new Text();
-
         return new Text(String.valueOf(type.getCharacter()));
     }
 

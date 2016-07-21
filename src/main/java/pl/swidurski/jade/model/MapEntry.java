@@ -74,7 +74,9 @@ public class MapEntry {
 
     private boolean setBackgroundColor(Optional<MapElement> first) {
         if (first.isPresent()) {
-            pane.setStyle("-fx-background-color: " + first.get().getType().getColor());
+            try {
+                pane.setStyle("-fx-background-color: " + first.get().getType().getColor());
+            } catch (Exception e) {}
             return true;
         }
         return false;

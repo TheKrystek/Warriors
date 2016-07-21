@@ -12,7 +12,7 @@ public enum ElementType {
     POTION('P', "blue"),
     MONSTER('M', "brown"),
     TREASURE('T', "yellow"),
-    WARRIOR('W', "red");
+    WARRIOR('W', "red"), ;
 
     @Getter
     private final String color;
@@ -38,6 +38,25 @@ public enum ElementType {
                 return MONSTER;
             case 'T':
                 return TREASURE;
+            default:
+                return PATH;
+        }
+    }
+
+    public static ElementType getElement(String s) {
+        switch (s) {
+            case "WALL":
+                return WALL;
+            case "PATH":
+                return PATH;
+            case "POTION":
+                return POTION;
+            case "MONSTER":
+                return MONSTER;
+            case "TREASURE":
+                return TREASURE;
+            case "WARRIOR":
+                return WARRIOR;
             default:
                 return PATH;
         }
