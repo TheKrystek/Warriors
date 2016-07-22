@@ -3,23 +3,32 @@ package pl.swidurski.jade.gui;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import pl.swidurski.jade.Const;
+import pl.swidurski.jade.helpers.PathHelper;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 
 public class ChooseMapController extends Controller {
-    private static final String[] maps = new String[]{"one.map","two.map"};
-
-
     @FXML
     ComboBox<String> mapSelector;
 
     @Override
     public void init() {
-        loadMaps();
+        try {
+            loadMaps();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void loadMaps() {
-        mapSelector.getItems().addAll(maps);
+    private void loadMaps() throws FileNotFoundException {
+        File maps = PathHelper.getFile(Const.MAPS);
+        File[] files = maps.listFiles();
+        for (File file : files) {
+            if (file.getName().endsWith(".map"))
+                mapSelector.getItems().add(file.getName());
+        }
     }
-
 
     @FXML
     public void confirm() {

@@ -4,10 +4,10 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import lombok.Getter;
 import lombok.Setter;
-import pl.swidurski.jade.model.ElementType;
-import pl.swidurski.jade.model.MapElement;
+import pl.swidurski.jade.helpers.PathHelper;
 import pl.swidurski.jade.model.MapModel;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 public class MapController extends Controller {
@@ -20,11 +20,17 @@ public class MapController extends Controller {
 
     @Override
     public void init() {
-        loadMap((String) getParameters());
+        try {
+            loadMap((String) getParameters());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void loadMap(String path) {
-        InputStream stream = getClass().getClassLoader().getResourceAsStream(path);
+    public void loadMap(String path) throws FileNotFoundException {
+        InputStream stream = PathHelper.getStream(path);
         mapModel = MapModel.build(stream, map);
     }
 }
+
+
